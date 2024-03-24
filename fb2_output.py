@@ -14,6 +14,7 @@ def create_fb2_file(merged_author_dict, ns):
 
     root = etree.fromstring(initial_document_info.encode('utf-8'))  # Создает корневой элемент с начальной информацией
 
+
     for author, books in merged_author_dict.items():
         create_author_block(root, author, books, ns)  # Создает блок данных для каждого автора
     # Удаляет дублирующиеся строки
@@ -53,7 +54,7 @@ def check_and_remove_nonexistent_links(content, ns):
     tree = etree.fromstring(content)  # Создает объект ElementTree из XML строки
 
     for link in tree.xpath('.//fb:a[@xlink:href]', namespaces=ns):
-        xlink_href = os.path.join('books', link.get(f'{ns["xlink"]}href'))  # Формирует полный путь к файлу
+        xlink_href = os.path.join('books', link.get(f"{{{ns['xlink']}}}href"))  # Формирует полный путь к файлу
         is_file_exists = os.path.isfile(xlink_href)  # Проверяет, существует ли файл
 
         if not is_file_exists:
@@ -98,7 +99,10 @@ def create_author_block(root, author, books, ns):
             # Создает элемент абзаца
             p_element = etree.SubElement(root.find(".//fb:section", namespaces=ns), 'p', name='book')
             # Создает элемент ссылки на книгу
-            a_element = etree.SubElement(p_element, 'a', xlink_href=f"{author}/{book}")
+
+            a_element = etree.SubElement(p_element, 'a', {f"{{{ns['xlink']}}}href": f"{author}/{book}"})
+
+
             a_element.text = f'  - {title}'  # Устанавливает текст ссылки
 
     etree.SubElement(root.find(".//fb:section", namespaces=ns), 'empty-line')  # Добавляет пустую строку

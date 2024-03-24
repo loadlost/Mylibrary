@@ -235,5 +235,5 @@ def process_books_in_folder(folder):
 
 
 if __name__ == "__main__":
-    folder_path = os.path.join(os.getcwd(), 'books')  # Формирует путь к папке с книгами
+    folder_path = os.path.join(os.getcwd(), 'Books')  # Формирует путь к папке с книгами
     process_books_in_folder(folder_path)  # Вызывает функцию обработки книг в указанной папке
